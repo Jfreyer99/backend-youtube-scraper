@@ -11,10 +11,10 @@ let morgan = require('morgan')
 
 let accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
 
+const videoListRoute = require('./routes/YoutubeVideoList/YoutubeVideoListRoute')
+
 mongoose.set('strictQuery', false);
 mongoose.connect('mongodb://localhost:27017/youtube_scraper')
-
-const videoListRoute = require('./routes/YoutubeVideoList/YoutubeVideoListRoute')
 
 const port = 8000 || process.env.PORT;
 
