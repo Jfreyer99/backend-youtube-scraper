@@ -5,6 +5,8 @@ const helmet = require('helmet');
 const app = express();
 const cors = require('cors');
 
+const connectDatabase = require('./util')
+
 let fs = require('fs')
 let path = require('path')
 let morgan = require('morgan')
@@ -13,8 +15,7 @@ let accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {
 
 const videoListRoute = require('./routes/YoutubeVideoList/YoutubeVideoListRoute')
 
-mongoose.set('strictQuery', false);
-mongoose.connect('mongodb://localhost:27017/youtube_scraper')
+connectDatabase('mongodb://localhost:27017/youtube_scraper');
 
 const port = 8000 || process.env.PORT;
 

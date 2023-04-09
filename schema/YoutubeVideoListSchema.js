@@ -7,7 +7,8 @@ const YoutubeVideoList = new mongoose.Schema({
     handle: String,
     viewCount: String,
     title: String,
-    thumbnailURL: String
+    thumbnailURL: String,
+    viewCountNumber: Number,
 });
 
 const YoutubeVideoListModel = mongoose.model('YoutubeVideoList', YoutubeVideoList);
