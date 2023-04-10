@@ -21,8 +21,10 @@ router.get('/v1/youtubeVideoList/:handle', async (req, res, next) => {
         page = req.query.page || 0;
     }
 
-    const sort = req.query.sort || 0;
-    const title = req.query.title;
+
+    const sort = req.query.sort;
+
+    const title = req.query.title || "";
     const dateBefore = req.query.dateBefore;
 
     const unixTimestamp =
@@ -33,7 +35,7 @@ router.get('/v1/youtubeVideoList/:handle', async (req, res, next) => {
 
 
     //Error Handling: Send right response if data is not found
-    if(!isNaN(sort)){
+    if(!isNaN(sort) && sort !== undefined){
         videos = await YoutubeVideoListModel
         .find({'handle': handle})
         .where('unixTimeStamp')
