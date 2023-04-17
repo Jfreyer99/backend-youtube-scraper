@@ -25,23 +25,22 @@ router.put('*', (req, res, next) => {
  */
 router.put('/v1/youtubeVideoList', async (req, res, next) => {
 
-    //TODO If videos already exists update them with the current videos
-
-    let videos = [];
-
     const payload = JSON.parse(JSON.stringify(req.body))
 
+    let dbResponse = null;
+
     for(let video of payload){
-        videos.push(video);
+        dbResponse = await YoutubeVideoListModel.exists({"videoURL": video.videoURL});
+        if(dbResponse){
+            dbResponse = await YoutubeVideoListModel.updateOne({"videoURL": video.videoURL}, video);
+        }
+        else if(dbResponse === null){
+            dbResponse = await YoutubeVideoListModel.collection.insertOne(video);
+        }
     }
 
-    const dbResponse = await YoutubeVideoListModel.collection.insertMany(videos);
-    if(dbResponse){
-        res.status(200).send("Hello World"); 
-    }
-    else{
-        res.status(500).send("Error")
-    }
+    res.status(200).send("Hello World"); 
+
 });
 
 module.exports = router;

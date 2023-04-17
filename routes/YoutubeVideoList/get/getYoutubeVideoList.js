@@ -21,41 +21,42 @@ router.get('/v1/youtubeVideoList/:handle', async (req, res, next) => {
         page = req.query.page || 0;
     }
 
-
     const sort = req.query.sort;
 
     const title = req.query.title || "";
-    const dateBefore = req.query.dateBefore;
+    let dateBefore = req.query.dateBefore;
 
     const unixTimestamp =
-    Math.floor(new Date(`${dateBefore} 00:00:00.000`).getTime());
+    Math.floor(new Date(`${dateBefore}`).getTime());
 
-    const videosPerPage = 24;
+    const videosPerPage = 12;
     let videos = [];
-
 
     //Error Handling: Send right response if data is not found
     if(!isNaN(sort) && sort !== undefined){
         videos = await YoutubeVideoListModel
-        .find({'handle': handle})
+        .find({'handle': handle,'title': new RegExp(title, 'i')})
         .where('unixTimeStamp')
         .lte(unixTimestamp)
-        .find({'title': new RegExp(title, 'i')})
         .sort({"unixTimeStamp" : sort})
         .skip(page*videosPerPage)
         .limit(videosPerPage);
     }else{
         videos = await YoutubeVideoListModel
-        .find({'handle': handle})
+        .find({'handle': handle,'title': new RegExp(title, 'i')})
         .where('unixTimeStamp')
         .lte(unixTimestamp)
-        .find({'title': new RegExp(title, 'i')})
         .sort({"viewCountNumber" : -1})
         .skip(page*videosPerPage)
         .limit(videosPerPage);
     }
 
-    res.status(200).send(videos);
+    if(videos){
+        res.status(200).send(videos);
+    }
+    else{
+        res.status(500).send({"message": "Couldn't find the videos"});
+    }
 
 });
 
