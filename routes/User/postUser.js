@@ -2,9 +2,16 @@ const express = require('express');
 const router = express.Router();
 const UserModel = require('./../../schema/User');
 const bcrypt = require('bcryptjs')
-router.post("/v1/user/login", (req, res, next) => {
-    
+const passport = require('passport');
+
+router.post("/v1/user/login", passport.authenticate("local"), (req, res, next) => {
+
+    res.send("auth");
 });
+
+router.post("/v1/user/loginFail", (req, res ,next) => {
+    res.send("Failure");
+})
 
 router.post("/v1/user/register", async (req, res, next) => {
     
