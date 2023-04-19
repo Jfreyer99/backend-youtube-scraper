@@ -1,12 +1,31 @@
 const express = require('express');
 const router = express.Router();
 
-
-router.get("/v1/user/:email", (req, res, next) => {
-    console.log("req user");
-    console.log(req.params.email);
-    res.status(200).send(req.user)
+router.get('/login-success', (req, res ,next) => {
+    if(req.isAuthenticated())
+    {
+        return res.send(req.user);
+    }
+    res.status(403).send("Whatcha doing here?")
 });
 
+router.get('/v1/user/isAuth', (req, res, next) => {
+    if(req.isAuthenticated){
+        return res.status(200).send(req.user);
+    }
+    return res.status(403).send("Error");
+})
+
+router.get("/login-failure", (req, res ,next) => {
+    res.status(403).send("Whatcha doing here?")
+});
+
+router.get("/v1/user/logout", (req, res, next) => {
+    if(req.isAuthenticated){
+        req.logOut();
+        res.send("Logged Out")
+    }
+    res.status(403).send("Error")
+});
 
 module.exports = router;

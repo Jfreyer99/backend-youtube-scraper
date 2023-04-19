@@ -4,14 +4,8 @@ const UserModel = require('./../../schema/User');
 const bcrypt = require('bcryptjs')
 const passport = require('passport');
 
-router.post("/v1/user/login", passport.authenticate("local"), (req, res, next) => {
-
-    res.send("auth");
-});
-
-router.post("/v1/user/loginFail", (req, res ,next) => {
-    res.send("Failure");
-})
+router.post("/v1/user/login", passport.authenticate("local", 
+{ failureRedirect: '/login-failure', successRedirect: '/login-success'}), (req, res, next) => {});
 
 router.post("/v1/user/register", async (req, res, next) => {
     
@@ -23,8 +17,7 @@ router.post("/v1/user/register", async (req, res, next) => {
         const hashedPassword = await bcrypt.hash(req.body.password, 15);
 
         if(!hashedPassword){
-            res.status(500).send("Internal Server Error")
-            return;
+            return res.status(500).send("Internal Server Error")
         }
         const newUser = new UserModel({
             username: req.body.username,
