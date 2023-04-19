@@ -11,7 +11,9 @@ router.get('/login-success', (req, res ,next) => {
 
 router.get('/v1/user/isAuth', (req, res, next) => {
     if(req.isAuthenticated){
-        return res.status(200).send(req.user);
+        const username = req.user.username;
+        const email = req.user.email;
+        return res.status(200).send({username, email});
     }
     return res.status(403).send("Error");
 })
